@@ -223,13 +223,13 @@ model_metrics (id, city, model_type, rmse, mae, r2_score, confidence, trained_at
 
 | Component | Status |
 |-----------|--------|
-| Data Collection and EDA | Complete |
-| Data Preprocessing | Complete |
-| LSTM Model | Complete |
-| XGBoost Source Analysis | Complete |
-| Autoencoder Anomaly Detection | Complete |
-| Explainable AI (SHAP) | Complete |
-| PostgreSQL Database | Complete |
+| Data Collection and EDA | Completed |
+| Data Preprocessing | Completed |
+| LSTM Model | Completed |
+| XGBoost Source Analysis | Completed |
+| Autoencoder Anomaly Detection | Completed |
+| Explainable AI (SHAP) | Completed |
+| PostgreSQL Database | Completed |
 | Go Backend REST API | In Progress |
 | Frontend Dashboard | In Progress |
 
