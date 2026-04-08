@@ -1,7 +1,7 @@
 # PolluTrace AI
 ### Urban Air Pollution Source Analysis and Prediction System
 
-**Team ID:** S3-T3 | **Faculty:** Dr. Susmita Das | **Phase 1:** Complete
+**Team ID:** S3-T3 | **Faculty:** Dr. Susmita Das 
 
 ---
 
