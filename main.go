@@ -57,7 +57,7 @@ func main() {
 		}
 		dat, err := json.Marshal(resp)
 		if err != nil {
-			w.WriteHeader(404)
+			w.WriteHeader(400)
 			w.Write([]byte("Bad Request"))
 		}
 		w.WriteHeader(201)
@@ -84,9 +84,39 @@ func main() {
 
 		dat, err := json.Marshal(resp)
 		if err != nil {
-			w.WriteHeader(404)
+			w.WriteHeader(400)
 			w.Write([]byte("Bad Request"))
 			return
+		}
+		w.WriteHeader(201)
+		w.Write(dat)
+	})
+
+	mux.HandleFunc("GET /api/sources", func(w http.ResponseWriter, r *http.Request) {
+		cityParams := r.URL.Query().Get("city")
+		city := sql.NullString{String: cityParams}
+		analysis, err := cfg.db.GetSourceAnalysis(r.Context(), city)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		resp := struct {
+			City           sql.NullString  `json:"city"`
+			TopSource1     sql.NullString  `json:"top_source_1"`
+			TopSource2     sql.NullString  `json:"top_source_2"`
+			Pm10Importance sql.NullFloat64 `json:"pm10_importance"`
+			Confidence     sql.NullFloat64 `json:"confidence"`
+		}{
+			City:           analysis.City,
+			TopSource1:     analysis.TopSource1,
+			TopSource2:     analysis.TopSource2,
+			Pm10Importance: analysis.Pm10Importance,
+			Confidence:     analysis.Confidence,
+		}
+		dat, err := json.Marshal(resp)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte("Bad Request"))
 		}
 		w.WriteHeader(201)
 		w.Write(dat)
