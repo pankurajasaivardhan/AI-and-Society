@@ -122,6 +122,45 @@ func main() {
 		w.Write(dat)
 	})
 
+	mux.HandleFunc("GET /api/metrics", func(w http.ResponseWriter, r *http.Request) {
+		metrics, err := cfg.db.GetModelMetrics(r.Context())
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		type modelMetrics struct {
+			City       sql.NullString  `json:"city"`
+			ModelType  sql.NullString  `json:"model_type"`
+			Rmse       sql.NullFloat64 `json:"rmse"`
+			Mae        sql.NullFloat64 `json:"mae"`
+			R2Score    sql.NullFloat64 `json:"r2_score"`
+			Confidence sql.NullFloat64 `json:"confidence"`
+		}
+		resp := make([]modelMetrics, len(metrics))
+		for i := 0; i < len(metrics); i++ {
+			resp[i].City = metrics[i].City
+			resp[i].ModelType = metrics[i].ModelType
+			resp[i].Rmse = metrics[i].Rmse
+			resp[i].Mae = metrics[i].Mae
+			resp[i].R2Score = metrics[i].R2Score
+			resp[i].Confidence = metrics[i].Confidence
+		}
+		dat, err := json.Marshal(resp)
+		if err != nil {
+			w.WriteHeader(404)
+			w.Write([]byte("Not Found"))
+			return
+		}
+		w.WriteHeader(201)
+		w.Write(dat)
+	})
+
+	mux.HandleFunc("GET /api/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(200)
+		w.Write([]byte("OK"))
+	})
+
 	server := http.Server{Handler: mux}
 	server.Addr = ":8080"
 	if err := server.ListenAndServe(); err != nil {
