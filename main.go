@@ -64,6 +64,34 @@ func main() {
 		w.Write(dat)
 	})
 
+	mux.HandleFunc("GET /api/anomalies", func(w http.ResponseWriter, r *http.Request) {
+		cityParams := r.URL.Query().Get("city")
+		city := sql.NullString{String: cityParams}
+		city_anomaly, err := cfg.db.GetCityAnomaly(r.Context(), city)
+		resp := struct {
+			City      sql.NullString  `json:"city"`
+			Date      sql.NullTime    `json:"date"`
+			Pm25      sql.NullFloat64 `json:"pm25"`
+			IsAnomaly sql.NullBool    `json:"is_anomaly"`
+			Severity  sql.NullString  `json:"severity"`
+		}{
+			City:      city_anomaly.City,
+			Date:      city_anomaly.Date,
+			Pm25:      city_anomaly.Pm25,
+			IsAnomaly: city_anomaly.IsAnomaly,
+			Severity:  city_anomaly.Severity,
+		}
+
+		dat, err := json.Marshal(resp)
+		if err != nil {
+			w.WriteHeader(404)
+			w.Write([]byte("Bad Request"))
+			return
+		}
+		w.WriteHeader(201)
+		w.Write(dat)
+	})
+
 	server := http.Server{Handler: mux}
 	server.Addr = ":8080"
 	if err := server.ListenAndServe(); err != nil {
