@@ -63,4 +63,11 @@ func main() {
 		w.WriteHeader(201)
 		w.Write(dat)
 	})
+
+	server := http.Server{Handler: mux}
+	server.Addr = ":8080"
+	if err := server.ListenAndServe(); err != nil {
+		fmt.Println(err)
+		return
+	}
 }
