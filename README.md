@@ -351,12 +351,6 @@ NEXT_PUBLIC_API_BASE_URL=https://api.yourdomain.com
 | Data Credibility | All data from official CPCB government monitoring stations |
 | Model Uncertainty | MAPE and Within-20% metrics reported alongside R² |
 
----
 
-## License
-
-This project is created for educational purposes.
-
----
 
 **Built with ❤️ for clean air in Indian cities**
